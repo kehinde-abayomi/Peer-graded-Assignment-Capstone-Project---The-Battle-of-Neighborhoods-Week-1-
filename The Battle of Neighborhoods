@@ -1,0 +1,63 @@
+# Introduction: Business Problem
+Since the beginning of 2020, Jakarta and many other cities around the world have been under attack by an invisible army called ‘Novel Corona Virus’, also known as ‘Covid-19’. Every effort has been focusing on solving or minimizing problems, including Data Scientists. Data Scientists assessed the situations in places around the world, such as availability, amount, and geographical distribution (i.e. locations) of health infrastructures, such as virus testing centers and authorized hospitals to treat affected patients. In this article, we would like to present a simple analysis for determining strategic locations for the distribution of masks and medical devices for COVID-19 treatment, based on confirmed cases on May 28, 2020, and the red zone areas for “new normal” condition analysis.md
+
+#DATA
+A few Identified factors that influence our decision are:
+Covid-19 cases per district “Riwayat File Covid-19 DKI Jakarta”
+Total population in DKI Jakarta 2020 statistik.jakarta.go.id
+10 most population in DKI Jakarta 2020 per district statistik.jakarta.go.id
+Hospital for treatment covid-19 megapolitan.kompas.com
+The following data sources are needed to extract/generate the required information:
+Processed covid-19 positive case data collection on 28 May 2020 At 09.00.
+The distribution of mask sales based on the population in the DKI Jakarta area.
+The distribution of mask sales based on 5 districts with the most densely populated populations.
+New datasets (to be created) from Hospital table that contains city, district, along with their latitudes and longitudes.
+Let’s start the Project by importing necessary Python libraries.
+import requests # library to handle requests
+import pandas as pd # library for data analsysis
+import numpy as np # library to handle data in a vectorized manner
+import random # library for random number generation
+from bs4 import BeautifulSoup # library for web scrapping 
+
+#!conda install -c conda-forge geocoder --yes
+#print ("install geocoder")
+#!conda install -c conda-forge/label/gcc7 geocoder --yes
+#print ("install geocoder2")
+#!conda install -c conda-forge/label/cf201901 geocoder --yes
+#print ("install geocoder3")
+#!conda install -c conda-forge/label/cf202003 geocoder --yes
+#print ("install geocoder4")
+import geocoder
+
+#!conda install -c conda-forge geopy --yes 
+from geopy.geocoders import Nominatim # module to convert an address into latitude and longitude values
+
+# libraries for displaying images
+from IPython.display import Image 
+from IPython.core.display import HTML 
+    
+# tranforming json file into a pandas dataframe library
+from pandas.io.json import json_normalize
+
+#!conda install -c conda-forge folium=0.5.0 --yes
+import folium # plotting library
+
+from sklearn.cluster import KMeans
+import matplotlib.cm as cm
+import matplotlib.colors as colors
+
+print('Folium installed')
+print('Libraries imported.')
+
+CLIENT_ID = 'XXXXXXXXXXXXX' # your Foursquare ID
+CLIENT_SECRET = 'XXXXXXXXXXXX' # your Foursquare Secret
+VERSION = '20180604'
+LIMIT = 30
+print('Your credentails:')
+print('CLIENT_ID: ' + CLIENT_ID)
+print('CLIENT_SECRET:' + CLIENT_SECRET)
+
+# Read in the data Covid-19 cases per district (28 May,2020)
+df_cases = pd.read_csv("https://raw.githubusercontent.com/cahyati/Coursera_Capstone/master/Standar%20Kelurahan%20Data%20Corona%20(28%20MEI%202020%20Pukul%2009.00).csv")
+# View the top rows of the dataset
+df_cases
